@@ -21,39 +21,6 @@ import utility.ExtentManager;
 public class BaseClass {
     public static Properties prop;
 
-    public  WebDriver lauchBrowser(String browser,String URL)
-    {
-        System.out.println("Chrome Browser"+browser);
-        WebDriver driver=null;
-        if(browser.compareToIgnoreCase("Chrome")==0) {
-            System.out.println("Chrome Browser 3");
-                //Launch Chrome Browser
-            WebDriverManager.chromedriver().setup();
-            driver =new ChromeDriver();
-
-
-
-        }
-        if(browser.compareToIgnoreCase("Opera")==0) {
-
-            //Launch Chrome Browser
-            OperaOptions operaOptions = new OperaOptions();
-            String opera_profile="C:/Users/Admin/AppData/Roaming/Opera Software/Opera Stable";
-            operaOptions.addArguments("user-data-dir=" +opera_profile);
-            WebDriverManager.operadriver().setup();
-            driver =new OperaDriver(operaOptions);
-
-
-        }
-        driver.get(URL);
-
-        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-        driver.manage().window().maximize();
-
-        return driver;
-
-
-    }
 
     @BeforeSuite
     public void getPropertiesValue (){
@@ -66,6 +33,49 @@ public class BaseClass {
             e.printStackTrace();
         }catch (IOException ex){ex.printStackTrace();}
     }
+    public  WebDriver lauchBrowser(String browser,String URL)
+    {
+
+        WebDriver driver=null;
+        if(browser.compareToIgnoreCase("Chrome")==0) {
+
+                //Launch Chrome Browser
+            WebDriverManager.chromedriver().setup();
+            driver =new ChromeDriver();
+
+
+
+        }
+        if(browser.compareToIgnoreCase("Opera")==0) {
+
+            if(prop.getProperty("enablevpn")=="true"){
+                OperaOptions operaOptions = new OperaOptions();
+                operaOptions.addArguments("user-data-dir=" +prop.getProperty("opera_profile"));
+                WebDriverManager.operadriver().setup();
+                driver =new OperaDriver(operaOptions);
+            }
+            else{
+                WebDriverManager.operadriver().setup();
+                driver =new OperaDriver();
+            }
+
+        }
+        if(browser.compareToIgnoreCase("Internet Explorer")==0){
+            WebDriverManager.iedriver().setup();
+            driver =new ChromeDriver();
+        }
+
+        driver.get(URL);
+
+        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+        driver.manage().window().maximize();
+
+        return driver;
+
+
+    }
+
+
 
 
 
